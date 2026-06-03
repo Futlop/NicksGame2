@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7f9fc63f178c1f4597dc9ba7365000d, type: 3}
   m_Name: Vine Whip
   m_EditorClassIdentifier: Assembly-CSharp::MoveBase
-  name: 
-  description: 
-  type: 0
-  power: 0
-  accuracy: 0
-  pp: 0
+  name: Vine Whip
+  description: Placeholder Move
+  type: 2
+  power: 45
+  accuracy: 100
+  pp: 25
