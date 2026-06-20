@@ -17,12 +17,12 @@ public class BattleHud : MonoBehaviour
         hpBar.SetHP((float) creature.HP / creature.MaxHP);
     }
 
-    public void Update()
+    /* public void Update()
     {
         if(percent >= 0f)
         {
             hpBar.SetHP(percent);
             percent -= 0.001f;
         }
-    }
+    } */
 }
