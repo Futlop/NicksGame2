@@ -53,6 +53,51 @@ public class BattleSystem : MonoBehaviour
         dialogBox.EnableMoveSelector(true);
     }
 
+    IEnumerator PerformPlayerMove()
+    {
+        state = BattleState.Busy;
+
+        var move = playerUnit.Creature.Moves[currentMove];
+        yield return dialogBox.TypeDialog($"{playerUnit.Creature.Base.Name} used {move.Base.Name}");
+        
+        yield return new WaitForSeconds(1f);
+
+        bool isFainted = enemyUnit.Creature.TakeDamage(move, playerUnit.Creature);
+        yield return enemyHUD.UpdateHP();
+
+        if (isFainted)
+        {
+            yield return dialogBox.TypeDialog($"{enemyUnit.Creature.Base.Name} fainted");
+        }
+        else
+        {
+            StartCoroutine(EnemyMove());
+        }
+    }
+
+    IEnumerator EnemyMove()
+    {
+        state = BattleState.EnemyMove;
+
+        var move = enemyUnit.Creature.GetRandomMove();
+        yield return dialogBox.TypeDialog($"{enemyUnit.Creature.Base.Name} used {move.Base.Name}");
+        
+        yield return new WaitForSeconds(1f);
+
+        bool isFainted = playerUnit.Creature.TakeDamage(move, enemyUnit.Creature);
+        yield return playerHUD.UpdateHP();
+
+        if (isFainted)
+        {
+            yield return dialogBox.TypeDialog($"{playerUnit.Creature.Base.Name} fainted");
+        }
+        else
+        {
+            yield return dialogBox.TypeDialog("Choose an action");
+            PlayerAction();
+        }
+    }
+
     private void Update()
     {
         if(state == BattleState.PlayerAction)
@@ -119,5 +164,12 @@ public class BattleSystem : MonoBehaviour
             PlayerAction();
 
         dialogBox.UpdayeMoveSelection(currentMove, playerUnit.Creature.Moves[currentMove]);
+
+        if (Input.GetKeyDown(KeyCode.Z))
+        {
+            dialogBox.EnableMoveSelector(false);
+            dialogBox.EnableDialogText(true);
+            StartCoroutine(PerformPlayerMove());
+        }
     }
 }
