@@ -111,7 +111,57 @@ public enum Type
 {
     None,
     Normal,
-    Grass,
     Fire,
-    Water
+    Water,
+    Electric,
+    Grass,
+    Ice,
+    Fighting,
+    Poison,
+    Ground,
+    Flying,
+    Psychic,
+    Bug,
+    Rock,
+    Ghost,
+    Dragon,
+    Dark,
+    Steel,
+    Fairy
+}
+
+public class TypeChart
+{
+    static float[][] chart =
+    {   //                    NOR  FIR  WAT  ELE  GRS  ICE  FGT  PSN  GRD  FLY  PSY  BUG  RCK  GST  DGN  DRK  STL  FRY
+        /*NOR*/ new float[] { 1f,  1f,  1f,  1f,  1f,  1f,  1f,  1f,  1f,  1f,  1f,  1f,  0.5f,0f,  1f,  1f,  0.5f,1f },
+        /*FIR*/ new float[] { 1f,  0.5f,0.5f,1f,  2f,  2f,  1f,  1f,  1f,  1f,  1f,  2f,  0.5f,1f,  0.5f,1f,  2f,  1f  },
+        /*WAT*/ new float[] { 1f,  2f,  0.5f,1f,  0.5f,1f,  1f,  1f,  2f,  1f,  1f,  1f,  2f,  1f,  0.5f,1f,  1f,  1f  },
+        /*ELE*/ new float[] { 1f,  1f,  2f,  0.5f,0.5f,1f,  1f,  1f,  0f,  2f,  1f,  1f,  1f,  1f,  0.5f,1f,  1f,  1f  },
+        /*GRS*/ new float[] { 1f,  0.5f,2f,  1f,  0.5f,1f,  1f,  0.5f,2f,  0.5f,1f,  0.5f,2f,  1f,  0.5f,1f,  0.5f,1f  },
+        /*ICE*/ new float[] { 1f,  0.5f,0.5f,1f,  2f,  0.5f,1f,  1f,  2f,  2f,  1f,  1f,  1f,  1f,  2f,  1f,  0.5f,1f  },
+        /*FGT*/ new float[] { 2f,  1f,  1f,  1f,  1f,  2f,  1f,  0.5f,1f,  0.5f,0.5f,0.5f,2f,  0f,  1f,  2f,  2f,  0.5f},
+        /*PSN*/ new float[] { 1f,  1f,  1f,  1f,  2f,  1f,  1f,  0.5f,0.5f,1f,  1f,  1f,  0.5f,0.5f,1f,  1f,  0f,  2f  },
+        /*GRD*/ new float[] { 1f,  2f,  1f,  2f,  0.5f,1f,  1f,  2f,  1f,  0f,  1f,  0.5f,2f,  1f,  1f,  1f,  2f,  1f  },
+        /*FLY*/ new float[] { 1f,  1f,  1f,  0.5f,2f,  1f,  2f,  1f,  1f,  1f,  1f,  2f,  0.5f,1f,  1f,  1f,  0.5f,1f  },
+        /*PSY*/ new float[] { 1f,  1f,  1f,  1f,  1f,  1f,  2f,  2f,  1f,  1f,  0.5f,1f,  1f,  1f,  1f,  0f,  0.5f,1f  },
+        /*BUG*/ new float[] { 1f,  0.5f,1f,  1f,  2f,  1f,  0.5f,0.5f,1f,  0.5f,2f,  1f,  1f,  0.5f,1f,  2f,  0.5f,0.5f},
+        /*RCK*/ new float[] { 1f,  2f,  1f,  1f,  1f,  2f,  0.5f,1f,  0.5f,2f,  1f,  2f,  1f,  1f,  1f,  1f,  0.5f,1f  },
+        /*GST*/ new float[] { 0f,  1f,  1f,  1f,  1f,  1f,  1f,  1f,  1f,  1f,  2f,  1f,  1f,  2f,  1f,  0.5f,1f,  1f  },
+        /*DGN*/ new float[] { 1f,  1f,  1f,  1f,  1f,  1f,  1f,  1f,  1f,  1f,  1f,  1f,  1f,  1f,  2f,  1f,  0.5f,0f  },
+        /*DRK*/ new float[] { 1f,  1f,  1f,  1f,  1f,  1f,  0.5f,1f,  1f,  1f,  2f,  1f,  1f,  2f,  1f,  0.5f,0.5f,0.5f},
+        /*STL*/ new float[] { 1f,  0.5f,0.5f,0.5f,1f,  2f,  1f,  1f,  1f,  1f,  1f,  1f,  2f,  1f,  1f,  1f,  0.5f,2f  },
+        /*FRY*/ new float[] { 1f,  0.5f,1f,  1f,  1f,  1f,  2f,  0.5f,1f,  1f,  1f,  1f,  1f,  1f,  2f,  2f,  0.5f,1f  },
+    };
+
+    public static float GetEffectiveness(Type attackType, Type defenseType)
+    {
+        if(attackType == Type.None || defenseType == Type.None)
+            return 1;
+
+        int row = (int)attackType - 1;
+        int col = (int)defenseType - 1;
+
+        return chart[row][col];   
+    }
 }
