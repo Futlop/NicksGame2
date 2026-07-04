@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class BattleUnit : MonoBehaviour
 {
@@ -11,12 +12,60 @@ public class BattleUnit : MonoBehaviour
 
     public Creature Creature { get; set; }
 
+    Image image;
+    Vector3 originalPos;
+    Color originalColour;
+
+    private void Awake()
+    {
+        image = GetComponent<Image>();
+        originalPos = image.transform.localPosition;
+        originalColour = image.color;
+    }
+
     public void Setup()
     {
         Creature = new Creature(_base, level);
         if (isPlayerUnit)
-            GetComponent<Image>().sprite = Creature.Base.Back;
+            image.sprite = Creature.Base.Back;
         else
-            GetComponent<Image>().sprite = Creature.Base.Front;
+            image.sprite = Creature.Base.Front;
+
+        PlayEnterAnimation();
+    }
+
+    public void PlayEnterAnimation()
+    {
+        if(isPlayerUnit)
+            image.transform.localPosition = new Vector3(-500f, originalPos.y);
+        else
+            image.transform.localPosition = new Vector3(500f, originalPos.y);
+
+        image.transform.DOLocalMoveX(originalPos.x, 2f);
+    }
+
+    public void PlayAttackAnimation()
+    {
+        var sequence = DOTween.Sequence();
+        if(isPlayerUnit)
+            sequence.Append(image.transform.DOLocalMoveX(originalPos.x + 50f, 0.25f));
+        else
+            sequence.Append(image.transform.DOLocalMoveX(originalPos.x - 50f, 0.25f));
+
+        sequence.Append(image.transform.DOLocalMoveX(originalPos.x, 0.25f));
+    }
+
+    public void PlayHitAnimation()
+    {
+        var sequence = DOTween.Sequence();
+        sequence.Append(image.DOColor(Color.gray, 0.1f));
+        sequence.Append(image.DOColor(originalColour, 0.1f));
+    }
+
+    public void PlayFaintAnimation()
+    {
+        var sequence = DOTween.Sequence();
+        sequence.Append(image.transform.DOLocalMoveY(originalPos.y - 150, 0.5f));
+        sequence.Join(image.DOFade(0f, 0.5f));
     }
 }
