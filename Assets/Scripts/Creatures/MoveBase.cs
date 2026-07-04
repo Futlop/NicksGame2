@@ -42,4 +42,15 @@ public class MoveBase : ScriptableObject
     {
         get { return pp; }
     }
+
+    public bool IsSpecial
+    {
+        get
+        {
+            if(type == Type.Fire || type == Type.Water || type == Type.Grass || type == Type.Ice || type == Type.Electric || type == Type.Dragon || type == Type.Fairy)
+                return true;
+            else
+                return false;
+        }
+    }
 }
