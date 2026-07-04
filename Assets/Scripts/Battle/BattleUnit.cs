@@ -31,6 +31,7 @@ public class BattleUnit : MonoBehaviour
         else
             image.sprite = Creature.Base.Front;
 
+        image.color = originalColour;
         PlayEnterAnimation();
     }
 
