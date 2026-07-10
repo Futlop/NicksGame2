@@ -2,19 +2,33 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
 public class Creature
 {
-    public CreatureBase Base { get; set; }
-    public int Level { get; set; }
+    [SerializeField] CreatureBase _base;
+    [SerializeField] int level;
+
+    public CreatureBase Base
+    {
+        get
+        {
+            return _base;
+        }
+    }
+    public int Level
+    {
+        get
+        {
+            return level;
+        }
+    }
 
     public int HP { get; set; }
 
     public List<Move> Moves { get; set; }
 
-    public Creature(CreatureBase cbase, int clevel)
+    public void Init()
     {
-        Base = cbase;
-        Level = clevel;
         HP = MaxHP;
 
         Moves = new List<Move>();

@@ -1268,8 +1268,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62aca40d7c086b7498a1e8d6253b46e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BattleUnit
-  _base: {fileID: 11400000, guid: ec4e4e97648b40442a5e1d271621ef6d, type: 2}
-  level: 5
   isPlayerUnit: 0
 --- !u!1 &215093716
 GameObject:
@@ -1763,8 +1761,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62aca40d7c086b7498a1e8d6253b46e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BattleUnit
-  _base: {fileID: 11400000, guid: 7bf6caf3d81ecfb41a23f69f7acbf423, type: 2}
-  level: 7
   isPlayerUnit: 1
 --- !u!1 &473475978
 GameObject:
@@ -3020,6 +3016,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1296543004}
   - component: {fileID: 1296543003}
+  - component: {fileID: 1296543005}
   m_Layer: 0
   m_Name: Grid
   m_TagString: Untagged
@@ -3055,6 +3052,23 @@ Transform:
   - {fileID: 493444926}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1296543005
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1296543002}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 526b1980abe697446b52524a73e0c866, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MapArea
+  wildCreatures:
+  - _base: {fileID: 11400000, guid: ec4e4e97648b40442a5e1d271621ef6d, type: 2}
+    level: 5
+  - _base: {fileID: 11400000, guid: ec4e4e97648b40442a5e1d271621ef6d, type: 2}
+    level: 7
 --- !u!1 &1349139929
 GameObject:
   m_ObjectHideFlags: 0
@@ -3142,6 +3156,7 @@ GameObject:
   - component: {fileID: 1389354283}
   - component: {fileID: 1389354282}
   - component: {fileID: 1389354285}
+  - component: {fileID: 1389354286}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -3265,6 +3280,23 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1389354286
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1389354281}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de78f18b112a93a47ad35ac401cf2ac7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Party
+  creatures:
+  - _base: {fileID: 11400000, guid: 7bf6caf3d81ecfb41a23f69f7acbf423, type: 2}
+    level: 7
+  - _base: {fileID: 11400000, guid: ec4e4e97648b40442a5e1d271621ef6d, type: 2}
+    level: 3
 --- !u!1 &1467394810
 GameObject:
   m_ObjectHideFlags: 0
