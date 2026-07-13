@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum BattleState { Start, PlayerAction, PlayerMove, EnemyMove, Busy}
+public enum BattleState { Start, PlayerAction, PlayerMove, EnemyMove, Busy, PartyScreen}
 
 public class BattleSystem : MonoBehaviour
 {
@@ -19,6 +19,7 @@ public class BattleSystem : MonoBehaviour
     BattleState state;
     int currentAction;
     int currentMove;
+    int currentMember;
 
     Party playerParty;
     Creature wildCreature;
@@ -57,6 +58,7 @@ public class BattleSystem : MonoBehaviour
 
     void OpenPartyScreen()
     {
+        state = BattleState.PartyScreen;
         partyScreen.SetPartyData(playerParty.Creatures);
         partyScreen.gameObject.SetActive(true);
     }
@@ -125,15 +127,7 @@ public class BattleSystem : MonoBehaviour
             var nextCreature = playerParty.GetHealthyCreature();
             if(nextCreature != null)
             {
-                playerUnit.Setup(nextCreature);
-                playerHUD.SetData(nextCreature);
-
-                dialogBox.SetMoveNames(nextCreature.Moves);
-
-                yield return dialogBox.TypeDialog($"Go {nextCreature.Base.Name}!");
-                yield return dialogBox.TypeDialog("Choose an action");
-
-                PlayerAction();
+                OpenPartyScreen();
             }
             else
             {
@@ -167,6 +161,10 @@ public class BattleSystem : MonoBehaviour
         else if(state == BattleState.PlayerMove)
         {
             HandleMoveSelection();
+        }
+        else if(state == BattleState.PartyScreen)
+        {
+            HandlePartySelection();
         }
     }
 
@@ -233,5 +231,64 @@ public class BattleSystem : MonoBehaviour
             dialogBox.EnableDialogText(true);
             PlayerAction();
         }
+    }
+
+    void HandlePartySelection()
+    {
+        if (Input.GetKeyDown(KeyCode.RightArrow))
+            ++currentMember;
+        else if (Input.GetKeyDown(KeyCode.LeftArrow))
+            --currentMember;
+        else if (Input.GetKeyDown(KeyCode.DownArrow))
+            currentMember += 2;
+        else if (Input.GetKeyDown(KeyCode.UpArrow))
+            currentMember -= 2;
+
+        currentMember = Mathf.Clamp(currentMember, 0, playerParty.Creatures.Count - 1);
+
+        partyScreen.UpdateMemberSelection(currentMember);
+
+        if (Input.GetKeyDown(KeyCode.Z))
+        {
+            var selectedMember = playerParty.Creatures[currentMember];
+            if(selectedMember.HP <= 0)
+            {
+                partyScreen.SetMessageText($"{selectedMember.Base.Name} is unable to battle");
+                return;
+            }
+            if(selectedMember == playerUnit.Creature)
+            {
+                partyScreen.SetMessageText($"{selectedMember.Base.Name} is already in battle");
+                return;
+            }
+
+            partyScreen.gameObject.SetActive(false);
+            dialogBox.EnableActionSelector(false);
+            state = BattleState.Busy;
+            StartCoroutine(SwitchCreature(selectedMember));
+        }
+        else if (Input.GetKeyDown(KeyCode.X))
+        {
+            partyScreen.gameObject.SetActive(false);
+            PlayerAction();
+        }
+    }
+
+    IEnumerator SwitchCreature(Creature newCreature)
+    {
+        if(playerUnit.Creature.HP > 0)
+        {
+            yield return dialogBox.TypeDialog($"Come back, {playerUnit.Creature.Base.Name}!");
+            playerUnit.PlayFaintAnimation();
+            yield return new WaitForSeconds(2f);
+        }
+
+        playerUnit.Setup(newCreature);
+        playerHUD.SetData(newCreature);
+        dialogBox.SetMoveNames(newCreature.Moves);
+
+        yield return dialogBox.TypeDialog($"Go {newCreature.Base.Name}!");
+
+        StartCoroutine(EnemyMove());
     }
 }
