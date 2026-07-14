@@ -14,7 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MoveBase
   name: Vine Whip
   description: Placeholder Move
-  type: 2
+  type: 5
   power: 45
   accuracy: 100
   pp: 25
+  category: 0
+  effects:
+    boosts: []
+  target: 0

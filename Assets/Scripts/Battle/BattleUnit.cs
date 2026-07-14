@@ -7,6 +7,23 @@ using DG.Tweening;
 public class BattleUnit : MonoBehaviour
 {
     [SerializeField] bool isPlayerUnit;
+    [SerializeField] BattleHud hud;
+
+    public bool IsPlayerUnit
+    {
+        get
+        {
+            return isPlayerUnit;
+        }
+    }
+
+    public BattleHud Hud
+    {
+        get
+        {
+            return hud;
+        }
+    }
 
     public Creature Creature { get; set; }
 
@@ -28,6 +45,8 @@ public class BattleUnit : MonoBehaviour
             image.sprite = Creature.Base.Back;
         else
             image.sprite = Creature.Base.Front;
+
+        hud.SetData(creature);
 
         image.color = originalColour;
         PlayEnterAnimation();

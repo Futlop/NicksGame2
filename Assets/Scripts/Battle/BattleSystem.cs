@@ -3,14 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum BattleState { Start, PlayerAction, PlayerMove, EnemyMove, Busy, PartyScreen}
+public enum BattleState { Start, ActionSelection, MoveSelection, PerformMove, Busy, PartyScreen, BattleOver}
 
 public class BattleSystem : MonoBehaviour
 {
     [SerializeField] BattleUnit playerUnit;
-    [SerializeField] BattleHud playerHUD;
     [SerializeField] BattleUnit enemyUnit;
-    [SerializeField] BattleHud enemyHUD;
     [SerializeField] BattleDialogBox dialogBox;
     [SerializeField] PartyScreen partyScreen;
 
@@ -35,8 +33,6 @@ public class BattleSystem : MonoBehaviour
     {
         playerUnit.Setup(playerParty.GetHealthyCreature());
         enemyUnit.Setup(wildCreature);
-        playerHUD.SetData(playerUnit.Creature);
-        enemyHUD.SetData(enemyUnit.Creature);
 
         partyScreen.Init();
 
@@ -45,12 +41,18 @@ public class BattleSystem : MonoBehaviour
         yield return dialogBox.TypeDialog($"A wild {enemyUnit.Creature.Base.Name} appeared!");
         yield return dialogBox.TypeDialog("Choose an action");
 
-        PlayerAction();
+        ActionSelection();
     }
 
-    void PlayerAction()
+    void BattleOver(bool won)
     {
-        state = BattleState.PlayerAction;
+        state = BattleState.BattleOver;
+        OnBattleOver(won);
+    }
+
+    void ActionSelection()
+    {
+        state = BattleState.ActionSelection;
         dialogBox.EnableDialogText(true);
         dialogBox.EnableActionSelector(true);
         dialogBox.EnableMoveSelector(false);
@@ -63,81 +65,89 @@ public class BattleSystem : MonoBehaviour
         partyScreen.gameObject.SetActive(true);
     }
 
-    void PlayerMove()
+    void MoveSelection()
     {
-        state = BattleState.PlayerMove;
+        state = BattleState.MoveSelection;
         dialogBox.EnableActionSelector(false);
         dialogBox.EnableDialogText(false);
         dialogBox.EnableMoveSelector(true);
     }
 
-    IEnumerator PerformPlayerMove()
+    IEnumerator PlayerMove()
     {
-        state = BattleState.Busy;
+        state = BattleState.PerformMove;
 
         var move = playerUnit.Creature.Moves[currentMove];
-        move.PP--;
-        yield return dialogBox.TypeDialog($"{playerUnit.Creature.Base.Name} used {move.Base.Name}");
+        yield return RunMove(playerUnit, enemyUnit, move);
 
-        playerUnit.PlayAttackAnimation();
-        yield return new WaitForSeconds(1f);
-
-        enemyUnit.PlayHitAnimation();
-        var damageDetails = enemyUnit.Creature.TakeDamage(move, playerUnit.Creature);
-        yield return enemyHUD.UpdateHP();
-        yield return ShowDamageDetails(damageDetails);
-
-        if (damageDetails.Fainted)
-        {
-            yield return dialogBox.TypeDialog($"{enemyUnit.Creature.Base.Name} fainted");
-            enemyUnit.PlayFaintAnimation();
-
-            yield return new WaitForSeconds(2f);
-            OnBattleOver(true);
-        }
-        else
-        {
+        if(state == BattleState.PerformMove) // If the battle state wasn't changed, go to the next step
             StartCoroutine(EnemyMove());
-        }
     }
 
     IEnumerator EnemyMove()
     {
-        state = BattleState.EnemyMove;
+        state = BattleState.PerformMove;
 
         var move = enemyUnit.Creature.GetRandomMove();
-        move.PP--;
-        yield return dialogBox.TypeDialog($"{enemyUnit.Creature.Base.Name} used {move.Base.Name}");
+        yield return RunMove(enemyUnit, playerUnit, move);
 
-        enemyUnit.PlayAttackAnimation();
-        yield return new WaitForSeconds(1f);
-
-        playerUnit.PlayHitAnimation();
-        var damageDetails = playerUnit.Creature.TakeDamage(move, enemyUnit.Creature);
-        yield return playerHUD.UpdateHP();
-        yield return ShowDamageDetails(damageDetails);
-
-        if (damageDetails.Fainted)
+        if(state == BattleState.PerformMove) // If the battle state wasn't changed, go to the next step
         {
-            yield return dialogBox.TypeDialog($"{playerUnit.Creature.Base.Name} fainted");
-            playerUnit.PlayFaintAnimation();
+            yield return dialogBox.TypeDialog("Choose an action");
+            ActionSelection();
+        }
+    }
 
-            yield return new WaitForSeconds(2f);
+    IEnumerator RunMove(BattleUnit sourceUnit, BattleUnit targetUnit, Move move)
+    {
+        move.PP--;
+        yield return dialogBox.TypeDialog($"{sourceUnit.Creature.Base.Name} used {move.Base.Name}");
 
-            var nextCreature = playerParty.GetHealthyCreature();
-            if(nextCreature != null)
+        sourceUnit.PlayAttackAnimation();
+        yield return new WaitForSeconds(1f);
+        targetUnit.PlayHitAnimation();
+
+        if(move.Base.Category == MoveCategory.Status)
+        {
+            var effects = move.Base.Effects;
+            if(effects.Boosts != null)
             {
-                OpenPartyScreen();
-            }
-            else
-            {
-                OnBattleOver(false);
+                if(move.Base.Target == MoveTarget.Self)
+                    sourceUnit.Creature.ApplyBoosts(effects.Boosts);
+                else
+                    targetUnit.Creature.ApplyBoosts(effects.Boosts);
             }
         }
         else
         {
-            yield return dialogBox.TypeDialog("Choose an action");
-            PlayerAction();
+            var damageDetails = targetUnit.Creature.TakeDamage(move, sourceUnit.Creature);
+            yield return targetUnit.Hud.UpdateHP();
+            yield return ShowDamageDetails(damageDetails);
+        }
+
+        if (targetUnit.Creature.HP <= 0)
+        {
+            yield return dialogBox.TypeDialog($"{targetUnit.Creature.Base.Name} fainted");
+            targetUnit.PlayFaintAnimation();
+            yield return new WaitForSeconds(2f);
+
+            CheckForBattleOver(targetUnit);
+        }
+    }
+
+    void CheckForBattleOver(BattleUnit faintedUnit)
+    {
+        if (faintedUnit.IsPlayerUnit)
+        {
+            var nextCreature = playerParty.GetHealthyCreature();
+            if(nextCreature != null)
+                OpenPartyScreen();
+            else
+                BattleOver(false);
+        }
+        else
+        {
+            BattleOver(true);
         }
     }
 
@@ -154,11 +164,11 @@ public class BattleSystem : MonoBehaviour
 
     public void HandleUpdate()
     {
-        if(state == BattleState.PlayerAction)
+        if(state == BattleState.ActionSelection)
         {
             HandleActionSelection();
         }
-        else if(state == BattleState.PlayerMove)
+        else if(state == BattleState.MoveSelection)
         {
             HandleMoveSelection();
         }
@@ -187,7 +197,7 @@ public class BattleSystem : MonoBehaviour
         {
             if(currentAction == 0) //Fight is selected
             {
-                PlayerMove();
+                MoveSelection();
             }
             else if(currentAction == 1) //Bag is selected
             {
@@ -223,13 +233,13 @@ public class BattleSystem : MonoBehaviour
         {
             dialogBox.EnableMoveSelector(false);
             dialogBox.EnableDialogText(true);
-            StartCoroutine(PerformPlayerMove());
+            StartCoroutine(PlayerMove());
         }
         else if (Input.GetKeyDown(KeyCode.X))
         {
             dialogBox.EnableMoveSelector(false);
             dialogBox.EnableDialogText(true);
-            PlayerAction();
+            ActionSelection();
         }
     }
 
@@ -270,7 +280,7 @@ public class BattleSystem : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.X))
         {
             partyScreen.gameObject.SetActive(false);
-            PlayerAction();
+            ActionSelection();
         }
     }
 
@@ -284,7 +294,6 @@ public class BattleSystem : MonoBehaviour
         }
 
         playerUnit.Setup(newCreature);
-        playerHUD.SetData(newCreature);
         dialogBox.SetMoveNames(newCreature.Moves);
 
         yield return dialogBox.TypeDialog($"Go {newCreature.Base.Name}!");
