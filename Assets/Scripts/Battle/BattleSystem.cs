@@ -39,14 +39,25 @@ public class BattleSystem : MonoBehaviour
         dialogBox.SetMoveNames(playerUnit.Creature.Moves);
 
         yield return dialogBox.TypeDialog($"A wild {enemyUnit.Creature.Base.Name} appeared!");
-        yield return dialogBox.TypeDialog("Choose an action");
+        
+        ChooseFirstTurn();
+    }
 
-        ActionSelection();
+    void ChooseFirstTurn()
+    {
+        if(playerUnit.Creature.Speed >= enemyUnit.Creature.Speed)
+        {
+            StartCoroutine(dialogBox.TypeDialog("Choose an action"));
+            ActionSelection();
+        }
+        else
+            StartCoroutine(EnemyMove());
     }
 
     void BattleOver(bool won)
     {
         state = BattleState.BattleOver;
+        playerParty.Creatures.ForEach(c => c.OnBattleOver());
         OnBattleOver(won);
     }
 
@@ -109,14 +120,7 @@ public class BattleSystem : MonoBehaviour
 
         if(move.Base.Category == MoveCategory.Status)
         {
-            var effects = move.Base.Effects;
-            if(effects.Boosts != null)
-            {
-                if(move.Base.Target == MoveTarget.Self)
-                    sourceUnit.Creature.ApplyBoosts(effects.Boosts);
-                else
-                    targetUnit.Creature.ApplyBoosts(effects.Boosts);
-            }
+           yield return RunMoveEffects(move, sourceUnit.Creature, targetUnit.Creature);
         }
         else
         {
@@ -132,6 +136,48 @@ public class BattleSystem : MonoBehaviour
             yield return new WaitForSeconds(2f);
 
             CheckForBattleOver(targetUnit);
+        }
+
+        // Statuses like poison can hurt the player's creature after attacking
+        sourceUnit.Creature.OnAfterTurn();
+        yield return ShowStatusChanges(sourceUnit.Creature);
+        yield return sourceUnit.Hud.UpdateHP();
+        if (sourceUnit.Creature.HP <= 0)
+        {
+            yield return dialogBox.TypeDialog($"{sourceUnit.Creature.Base.Name} fainted");
+            sourceUnit.PlayFaintAnimation();
+            yield return new WaitForSeconds(2f);
+
+            CheckForBattleOver(sourceUnit);
+        }
+    }
+
+    IEnumerator RunMoveEffects(Move move, Creature source, Creature target)
+    {
+        var effects = move.Base.Effects;
+        if(effects.Boosts != null) // Stat boosts
+        {
+            if(move.Base.Target == MoveTarget.Self)
+                source.ApplyBoosts(effects.Boosts);
+            else
+                target.ApplyBoosts(effects.Boosts);
+        }
+
+        if(effects.Status != ConditionID.none) // Status conditions
+        {
+            target.SetStatus(effects.Status);
+        }
+
+        yield return ShowStatusChanges(source);
+        yield return ShowStatusChanges(target);
+    }
+
+    IEnumerator ShowStatusChanges(Creature creature)
+    {
+        while(creature.StatusChanges.Count > 0)
+        {
+            var message = creature.StatusChanges.Dequeue();
+            yield return dialogBox.TypeDialog(message);
         }
     }
 
@@ -286,18 +332,23 @@ public class BattleSystem : MonoBehaviour
 
     IEnumerator SwitchCreature(Creature newCreature)
     {
+        bool currentCreatureFainted = true;
         if(playerUnit.Creature.HP > 0)
         {
+            currentCreatureFainted = false;
             yield return dialogBox.TypeDialog($"Come back, {playerUnit.Creature.Base.Name}!");
+            playerUnit.Creature.OnBattleOver();
             playerUnit.PlayFaintAnimation();
             yield return new WaitForSeconds(2f);
         }
 
         playerUnit.Setup(newCreature);
         dialogBox.SetMoveNames(newCreature.Moves);
-
         yield return dialogBox.TypeDialog($"Go {newCreature.Base.Name}!");
 
-        StartCoroutine(EnemyMove());
+        if(currentCreatureFainted)
+            ChooseFirstTurn();
+        else
+            StartCoroutine(EnemyMove());
     }
 }

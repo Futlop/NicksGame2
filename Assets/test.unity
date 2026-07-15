@@ -4072,7 +4072,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Party
   creatures:
   - _base: {fileID: 11400000, guid: 7bf6caf3d81ecfb41a23f69f7acbf423, type: 2}
-    level: 7
+    level: 10
   - _base: {fileID: 11400000, guid: ec4e4e97648b40442a5e1d271621ef6d, type: 2}
     level: 3
   - _base: {fileID: 11400000, guid: ec4e4e97648b40442a5e1d271621ef6d, type: 2}
