@@ -9,5 +9,9 @@ public class Condition
     public string Description { get; set; }
     public string StartMessage { get; set; }
 
+    public Action<Creature> OnStart { get; set; }
+
+    public Func<Creature, bool> OnBeforeMove { get; set; }
+
     public Action<Creature> OnAfterTurn { get; set; }
 }

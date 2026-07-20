@@ -14,7 +14,7 @@ public class ConditionsDB
                 StartMessage = "has been poisoned",
                 OnAfterTurn = (Creature creature) =>
                 {
-                    creature.UpdateHP(creature.MaxHP / 8);
+                    creature.UpdateHP(Mathf.Clamp(creature.MaxHP / 8, 1, creature.MaxHP));
                     creature.StatusChanges.Enqueue($"{creature.Base.Name} is hurt by poison");
                 }
             }
@@ -23,12 +23,70 @@ public class ConditionsDB
             ConditionID.brn,
             new Condition
             {
+                // TODO: Half creature's attack when burned
                 Name = "Burn",
-                StartMessage = "has been burn",
+                StartMessage = "has been burned",
                 OnAfterTurn = (Creature creature) =>
                 {
-                    creature.UpdateHP(creature.MaxHP / 16);
+                    creature.UpdateHP(Mathf.Clamp(creature.MaxHP / 16, 1, creature.MaxHP));
                     creature.StatusChanges.Enqueue($"{creature.Base.Name} is hurt by its burn");
+                }
+            }
+        },
+        {
+            ConditionID.par,
+            new Condition
+            {
+                Name = "Paralyzed",
+                StartMessage = "has been paralyzed",
+                OnBeforeMove = (Creature creature) =>
+                {
+                    if(Random.Range(1, 5) == 1)
+                    {
+                        creature.StatusChanges.Enqueue($"{creature.Base.Name} is paralyzed. It can't move");
+                        return false;
+                    }
+                    return true;
+                }
+            }
+        },
+        {
+            ConditionID.frz,
+            new Condition
+            {
+                // TODO: half creature's special attack when frostbit
+                Name = "Frostbite",
+                StartMessage = "has frostbite",
+                OnAfterTurn = (Creature creature) =>
+                {
+                    creature.UpdateHP(Mathf.Clamp(creature.MaxHP / 16, 1, creature.MaxHP));
+                    creature.StatusChanges.Enqueue($"{creature.Base.Name} is hurt by its frostbite");
+                }
+            }
+        },
+        {
+            ConditionID.slp,
+            new Condition
+            {
+                Name = "Sleep",
+                StartMessage = "has fallen asleep",
+                OnStart = (Creature creature) =>
+                {
+                    // Sleep for 2-5 turns
+                    creature.StatusTime = Random.Range(2, 6);
+                },
+                OnBeforeMove = (Creature creature) =>
+                {
+                    if(creature.StatusTime <= 0)
+                    {
+                        creature.CureStatus();
+                        creature.StatusChanges.Enqueue($"{creature.Base.Name} woke up!");
+                        return true;
+                    }
+
+                    creature.StatusTime--;
+                    creature.StatusChanges.Enqueue($"{creature.Base.Name} is fast asleep");
+                    return false;
                 }
             }
         }
@@ -37,5 +95,5 @@ public class ConditionsDB
 
 public enum ConditionID
 {
-    none, psn, brn, par, frz
+    none, psn, brn, par, frz, slp
 }
