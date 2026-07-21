@@ -4,11 +4,22 @@ using UnityEngine;
 
 public class ConditionsDB
 {
+    public static void Init()
+    {
+        foreach(var kvp in Conditions)
+        {
+            var conditionID = kvp.Key;
+            var condition = kvp.Value;
+
+            condition.ID = conditionID;
+        }
+    }
+
     public static Dictionary<ConditionID, Condition> Conditions { get; set; } = new Dictionary<ConditionID, Condition>()
     {
         {
             ConditionID.psn,
-            new Condition
+            new Condition()
             {
                 Name = "Poison",
                 StartMessage = "has been poisoned",
@@ -21,7 +32,7 @@ public class ConditionsDB
         },
         {
             ConditionID.brn,
-            new Condition
+            new Condition()
             {
                 // TODO: Half creature's attack when burned
                 Name = "Burn",
@@ -35,7 +46,7 @@ public class ConditionsDB
         },
         {
             ConditionID.par,
-            new Condition
+            new Condition()
             {
                 Name = "Paralyzed",
                 StartMessage = "has been paralyzed",
@@ -52,7 +63,7 @@ public class ConditionsDB
         },
         {
             ConditionID.frz,
-            new Condition
+            new Condition()
             {
                 // TODO: half creature's special attack when frostbit
                 Name = "Frostbite",
@@ -66,7 +77,7 @@ public class ConditionsDB
         },
         {
             ConditionID.slp,
-            new Condition
+            new Condition()
             {
                 Name = "Sleep",
                 StartMessage = "has fallen asleep",
@@ -89,11 +100,42 @@ public class ConditionsDB
                     return false;
                 }
             }
+        },
+        {
+            ConditionID.confusion,
+            new Condition()
+            {
+                Name = "Confusion",
+                StartMessage = "has been confused",
+                OnStart = (Creature creature) =>
+                {
+                    creature.VolatileStatusTime = Random.Range(1, 5);
+                },
+                OnBeforeMove = (Creature creature) =>
+                {
+                    if(creature.VolatileStatusTime <= 0)
+                    {
+                        creature.CureVolatileStatus();
+                        creature.StatusChanges.Enqueue($"{creature.Base.Name} snapped out of its confusion!");
+                        return true;
+                    }
+
+                    creature.VolatileStatusTime--;
+                    creature.StatusChanges.Enqueue($"{creature.Base.Name} is confused");
+                    
+                    if(Random.Range(1, 3) == 1)
+                        return true;
+                    
+                    creature.UpdateHP(Mathf.Clamp(creature.MaxHP / 8, 1, creature.MaxHP));
+                    creature.StatusChanges.Enqueue($"It hurt itself due to confusion");
+                    return false;
+                }
+            }
         }
     };
 }
 
 public enum ConditionID
 {
-    none, psn, brn, par, frz, slp
+    none, psn, brn, par, frz, slp, confusion
 }

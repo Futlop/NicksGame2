@@ -115,6 +115,7 @@ public class BattleSystem : MonoBehaviour
         if (!canRunMove)
         {
             yield return ShowStatusChanges(sourceUnit.Creature);
+            yield return sourceUnit.Hud.UpdateHP();
             yield break;
         }
         yield return ShowStatusChanges(sourceUnit.Creature);
@@ -174,6 +175,11 @@ public class BattleSystem : MonoBehaviour
         if(effects.Status != ConditionID.none) // Status conditions
         {
             target.SetStatus(effects.Status);
+        }
+
+        if(effects.VolatileStatus != ConditionID.none) // Volatile status conditions
+        {
+            target.SetVolatileStatus(effects.VolatileStatus);
         }
 
         yield return ShowStatusChanges(source);
@@ -344,6 +350,7 @@ public class BattleSystem : MonoBehaviour
         if(playerUnit.Creature.HP > 0)
         {
             currentCreatureFainted = false;
+            playerUnit.Creature.CureVolatileStatus();
             yield return dialogBox.TypeDialog($"Come back, {playerUnit.Creature.Base.Name}!");
             playerUnit.Creature.OnBattleOver();
             playerUnit.PlayFaintAnimation();

@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 092ea03f08dbadb4c96e759db1cae8b7, type: 3}
+  m_Name: StatusDebug2
+  m_EditorClassIdentifier: Assembly-CSharp::CreatureBase
+  name: Status Debugger 2
+  description: Placeholder creature to test volatile status conditions
+  front: {fileID: 21300000, guid: 843823c80be1fe244945120519a22e53, type: 3}
+  back: {fileID: 21300000, guid: 843823c80be1fe244945120519a22e53, type: 3}
+  type1: 1
+  type2: 0
+  maxHP: 200
+  attack: 200
+  defense: 200
+  spAttack: 200
+  spDefense: 200
+  speed: 200
+  learnableMoves:
+  - moveBase: {fileID: 11400000, guid: 560623547213f214592a158adfa1340d, type: 2}
+    level: 1
+  - moveBase: {fileID: 11400000, guid: 83ac7bd2ac197494f92fe9e093e31246, type: 2}
+    level: 1
