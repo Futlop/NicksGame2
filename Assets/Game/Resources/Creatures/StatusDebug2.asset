@@ -15,7 +15,7 @@ MonoBehaviour:
   name: Status Debugger 2
   description: Placeholder creature to test volatile status conditions
   front: {fileID: 21300000, guid: 843823c80be1fe244945120519a22e53, type: 3}
-  back: {fileID: 21300000, guid: 843823c80be1fe244945120519a22e53, type: 3}
+  back: {fileID: 21300000, guid: 4ad46572811440e479a498ba4754f89d, type: 3}
   type1: 1
   type2: 0
   maxHP: 200
@@ -28,4 +28,6 @@ MonoBehaviour:
   - moveBase: {fileID: 11400000, guid: 560623547213f214592a158adfa1340d, type: 2}
     level: 1
   - moveBase: {fileID: 11400000, guid: 83ac7bd2ac197494f92fe9e093e31246, type: 2}
+    level: 1
+  - moveBase: {fileID: 11400000, guid: 4308b903d13674540ae3bd684e95ad30, type: 2}
     level: 1

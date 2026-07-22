@@ -16,10 +16,13 @@ MonoBehaviour:
   description: Placeholder move
   type: 8
   power: 0
-  accuracy: 0
+  accuracy: 100
+  alwaysHits: 0
   pp: 20
   category: 2
   effects:
     boosts: []
     status: 1
+    volatileStatus: 0
+  secondaries: []
   target: 0

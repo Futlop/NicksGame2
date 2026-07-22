@@ -136,7 +136,11 @@ public enum Stat
     Defense,
     SpAttack,
     SpDefense,
-    Speed
+    Speed,
+
+    // Not actual stats. Used to determine if moves hit
+    Accuracy,
+    Evasion
 }
 
 public class TypeChart

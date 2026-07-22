@@ -123,29 +123,48 @@ public class BattleSystem : MonoBehaviour
         move.PP--;
         yield return dialogBox.TypeDialog($"{sourceUnit.Creature.Base.Name} used {move.Base.Name}");
 
-        sourceUnit.PlayAttackAnimation();
-        yield return new WaitForSeconds(1f);
-        targetUnit.PlayHitAnimation();
-
-        if(move.Base.Category == MoveCategory.Status)
+        if(ChechIfMoveHits(move, sourceUnit.Creature, targetUnit.Creature))
         {
-           yield return RunMoveEffects(move, sourceUnit.Creature, targetUnit.Creature);
+            sourceUnit.PlayAttackAnimation();
+            yield return new WaitForSeconds(1f);
+            targetUnit.PlayHitAnimation();
+
+            if(move.Base.Category == MoveCategory.Status)
+            {
+                yield return RunMoveEffects(move.Base.Effects, sourceUnit.Creature, targetUnit.Creature, move.Base.Target);
+            }
+            else
+            {
+                var damageDetails = targetUnit.Creature.TakeDamage(move, sourceUnit.Creature);
+                yield return targetUnit.Hud.UpdateHP();
+                yield return ShowDamageDetails(damageDetails);
+            }
+
+            if(move.Base.Secondaries != null && move.Base.Secondaries.Count > 0 && targetUnit.Creature.HP > 0)
+            {
+                foreach(var secondary in move.Base.Secondaries)
+                {
+                    var rnd = UnityEngine.Random.Range(1, 101);
+                    if(rnd <= secondary.Chance)
+                        yield return RunMoveEffects(secondary, sourceUnit.Creature, targetUnit.Creature, secondary.Target);
+                }
+            }
+
+            if (targetUnit.Creature.HP <= 0)
+            {
+                yield return dialogBox.TypeDialog($"{targetUnit.Creature.Base.Name} fainted");
+                targetUnit.PlayFaintAnimation();
+                yield return new WaitForSeconds(2f);
+
+                CheckForBattleOver(targetUnit);
+            }
         }
         else
         {
-            var damageDetails = targetUnit.Creature.TakeDamage(move, sourceUnit.Creature);
-            yield return targetUnit.Hud.UpdateHP();
-            yield return ShowDamageDetails(damageDetails);
+            yield return dialogBox.TypeDialog($"{targetUnit.Creature.Base.Name} evaded the attack");
         }
 
-        if (targetUnit.Creature.HP <= 0)
-        {
-            yield return dialogBox.TypeDialog($"{targetUnit.Creature.Base.Name} fainted");
-            targetUnit.PlayFaintAnimation();
-            yield return new WaitForSeconds(2f);
-
-            CheckForBattleOver(targetUnit);
-        }
+        
 
         // Statuses like poison can hurt the player's creature after attacking
         sourceUnit.Creature.OnAfterTurn();
@@ -161,12 +180,11 @@ public class BattleSystem : MonoBehaviour
         }
     }
 
-    IEnumerator RunMoveEffects(Move move, Creature source, Creature target)
+    IEnumerator RunMoveEffects(MoveEffects effects, Creature source, Creature target, MoveTarget moveTarget)
     {
-        var effects = move.Base.Effects;
         if(effects.Boosts != null) // Stat boosts
         {
-            if(move.Base.Target == MoveTarget.Self)
+            if(moveTarget == MoveTarget.Self)
                 source.ApplyBoosts(effects.Boosts);
             else
                 target.ApplyBoosts(effects.Boosts);
@@ -184,6 +202,30 @@ public class BattleSystem : MonoBehaviour
 
         yield return ShowStatusChanges(source);
         yield return ShowStatusChanges(target);
+    }
+
+    bool ChechIfMoveHits(Move move, Creature source, Creature target)
+    {
+        if(move.Base.AlwaysHits)
+            return true;
+
+        float moveAccuracy = move.Base.Accuracy;
+        int accuracy = source.StatBoosts[Stat.Accuracy];
+        int evasion = target.StatBoosts[Stat.Evasion];
+
+        var boostValues = new float[] { 1f, 4f / 3f, 5f / 3f, 2f, 7f / 3f, 8f / 3f, 3f };
+
+        if(accuracy > 0)
+            moveAccuracy *= boostValues[accuracy];
+        else
+            moveAccuracy /= boostValues[-accuracy];
+
+        if(evasion > 0)
+            moveAccuracy /= boostValues[evasion];
+        else
+            moveAccuracy *= boostValues[-evasion];
+
+        return UnityEngine.Random.Range(1, 101) <= moveAccuracy;
     }
 
     IEnumerator ShowStatusChanges(Creature creature)
