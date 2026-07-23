@@ -3362,7 +3362,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Party
   creatures:
   - _base: {fileID: 11400000, guid: ec4e4e97648b40442a5e1d271621ef6d, type: 2}
-    level: 7
+    level: 2
   - _base: {fileID: 11400000, guid: 0ab0c619fd9609e42b5be1237dd6695b, type: 2}
     level: 10
   - _base: {fileID: 11400000, guid: ec4e4e97648b40442a5e1d271621ef6d, type: 2}
