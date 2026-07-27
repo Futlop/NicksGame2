@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [System.Serializable]
@@ -210,8 +211,11 @@ public class Creature
 
     public Move GetRandomMove()
     {
-        int r = Random.Range(0, Moves.Count);
-        return Moves[r];
+        var movesWithPP = Moves.Where(x => x.PP > 0).ToList();
+
+
+        int r = Random.Range(0, movesWithPP.Count);
+        return movesWithPP[r];
     }
 
     public bool OnBeforeMove()
