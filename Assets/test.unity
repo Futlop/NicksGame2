@@ -2375,6 +2375,7 @@ GameObject:
   - component: {fileID: 704135936}
   - component: {fileID: 704135935}
   - component: {fileID: 704135937}
+  - component: {fileID: 704135938}
   m_Layer: 0
   m_Name: GameController
   m_TagString: Untagged
@@ -2427,6 +2428,27 @@ MonoBehaviour:
   dialogBox: {fileID: 306328766}
   dialogText: {fileID: 593653463}
   lettersPerSecond: 45
+--- !u!114 &704135938
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 704135934}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4eba245e77a81bd4f93b5583d3d4508f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameLayers
+  solidObjectsLayer:
+    serializedVersion: 2
+    m_Bits: 256
+  longGrassLayer:
+    serializedVersion: 2
+    m_Bits: 512
+  interactableLayer:
+    serializedVersion: 2
+    m_Bits: 1024
 --- !u!1 &819045137
 GameObject:
   m_ObjectHideFlags: 0
@@ -3396,6 +3418,7 @@ GameObject:
   - component: {fileID: 1389354282}
   - component: {fileID: 1389354286}
   - component: {fileID: 1389354287}
+  - component: {fileID: 1389354288}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -3415,16 +3438,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0710b6e737f89384795a7f754fb0cf53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
-  moveSpeed: 5
-  solidObjectsLayer:
-    serializedVersion: 2
-    m_Bits: 256
-  longGrassLayer:
-    serializedVersion: 2
-    m_Bits: 512
-  interactableLayer:
-    serializedVersion: 2
-    m_Bits: 1024
 --- !u!212 &1389354283
 SpriteRenderer:
   serializedVersion: 2
@@ -3557,6 +3570,19 @@ MonoBehaviour:
   - {fileID: -790699523677361007, guid: 3111f23cd57d2be48b2ee6bac4a23588, type: 3}
   - {fileID: 8470420716495695676, guid: 3111f23cd57d2be48b2ee6bac4a23588, type: 3}
   - {fileID: 6167071470516247665, guid: 3111f23cd57d2be48b2ee6bac4a23588, type: 3}
+--- !u!114 &1389354288
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1389354281}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3f56e23db4dbd447a016e179533ef96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Character
+  moveSpeed: 5
 --- !u!1 &1534127437
 GameObject:
   m_ObjectHideFlags: 0
@@ -7892,6 +7918,8 @@ GameObject:
   - component: {fileID: 2017875967}
   - component: {fileID: 2017875966}
   - component: {fileID: 2017875968}
+  - component: {fileID: 2017875970}
+  - component: {fileID: 2017875969}
   m_Layer: 10
   m_Name: NPC
   m_TagString: Untagged
@@ -7967,7 +7995,7 @@ Transform:
   m_GameObject: {fileID: 2017875963}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.5, y: 0.8, z: 0}
+  m_LocalPosition: {x: -2.5, y: 0.8, z: 0}
   m_LocalScale: {x: 6.5043, y: 6.5043, z: 6.5043}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -8062,6 +8090,57 @@ MonoBehaviour:
     lines:
     - I am talking to you through the new dialog system.
     - Pretty cool, huh?
+  movementPattern:
+  - {x: 2, y: 0}
+  - {x: 0, y: -2}
+  - {x: -2, y: 0}
+  - {x: 0, y: 2}
+  timeBetweenPattern: 3
+--- !u!114 &2017875969
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2017875963}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7918aadf9e28e147a5481e57761d3aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CharacterAnimator
+  walkDownSprites:
+  - {fileID: -8922328891513336043, guid: 7d148af543176d846b0e4391462b1cb0, type: 3}
+  - {fileID: 5527661196443274707, guid: 7d148af543176d846b0e4391462b1cb0, type: 3}
+  - {fileID: -2495014906627460004, guid: 7d148af543176d846b0e4391462b1cb0, type: 3}
+  - {fileID: 5610367206947713552, guid: 7d148af543176d846b0e4391462b1cb0, type: 3}
+  walkUpSprites:
+  - {fileID: 307091595780809877, guid: 7d148af543176d846b0e4391462b1cb0, type: 3}
+  - {fileID: -2126968859773451732, guid: 7d148af543176d846b0e4391462b1cb0, type: 3}
+  - {fileID: -5535047699543943917, guid: 7d148af543176d846b0e4391462b1cb0, type: 3}
+  - {fileID: -4526993761146232485, guid: 7d148af543176d846b0e4391462b1cb0, type: 3}
+  walkLeftSprites:
+  - {fileID: 4614894318121576524, guid: 7d148af543176d846b0e4391462b1cb0, type: 3}
+  - {fileID: 7369579285134121275, guid: 7d148af543176d846b0e4391462b1cb0, type: 3}
+  - {fileID: -1211714280344312584, guid: 7d148af543176d846b0e4391462b1cb0, type: 3}
+  - {fileID: 6842672397523141539, guid: 7d148af543176d846b0e4391462b1cb0, type: 3}
+  walkRightSprites:
+  - {fileID: 2230936588577103941, guid: 7d148af543176d846b0e4391462b1cb0, type: 3}
+  - {fileID: -9111473675286820144, guid: 7d148af543176d846b0e4391462b1cb0, type: 3}
+  - {fileID: -5627484699997550656, guid: 7d148af543176d846b0e4391462b1cb0, type: 3}
+  - {fileID: -5051899674784280284, guid: 7d148af543176d846b0e4391462b1cb0, type: 3}
+--- !u!114 &2017875970
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2017875963}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3f56e23db4dbd447a016e179533ef96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Character
+  moveSpeed: 5
 --- !u!1 &2054015052
 GameObject:
   m_ObjectHideFlags: 0
