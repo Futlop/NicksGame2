@@ -46,10 +46,16 @@ public class BattleUnit : MonoBehaviour
         else
             image.sprite = Creature.Base.Front;
 
+        hud.gameObject.SetActive(true);
         hud.SetData(creature);
 
         image.color = originalColour;
         PlayEnterAnimation();
+    }
+
+    public void Clear()
+    {
+        hud.gameObject.SetActive(false);
     }
 
     public void PlayEnterAnimation()

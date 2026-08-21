@@ -5,6 +5,9 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    [SerializeField] Sprite sprite;
+    [SerializeField] string name;
+
     public event Action OnEncountered;
     public event Action<Collider2D> OnEnterTrainerView;
     private Vector2 input;
@@ -78,5 +81,15 @@ public class PlayerController : MonoBehaviour
             character.Animator.IsMoving = false;
             OnEnterTrainerView?.Invoke(collider);
         }
+    }
+
+    public string Name
+    {
+        get => name;
+    }
+
+    public Sprite Sprite
+    {
+        get => sprite;
     }
 }

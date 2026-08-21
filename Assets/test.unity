@@ -870,6 +870,8 @@ RectTransform:
   - {fileID: 1272556382}
   - {fileID: 387173427}
   - {fileID: 186412591}
+  - {fileID: 917707445}
+  - {fileID: 1527046676}
   - {fileID: 913577348}
   - {fileID: 1597228874}
   - {fileID: 599029090}
@@ -1374,6 +1376,7 @@ GameObject:
   - component: {fileID: 321424933}
   - component: {fileID: 321424932}
   - component: {fileID: 321424931}
+  - component: {fileID: 321424938}
   m_Layer: 10
   m_Name: Trainer
   m_TagString: Untagged
@@ -1393,6 +1396,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e02844b13579b1498ca5dda122b7279, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TrainerController
+  sprite: {fileID: -6815444706308093326, guid: 72df64b00069bf64c814b0a1a505bacc, type: 3}
+  name: Farto
   exclamation: {fileID: 1236666297}
   dialog:
     lines:
@@ -1594,6 +1599,23 @@ Transform:
   - {fileID: 1236666298}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &321424938
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 321424930}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de78f18b112a93a47ad35ac401cf2ac7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Party
+  creatures:
+  - _base: {fileID: 11400000, guid: 7bf6caf3d81ecfb41a23f69f7acbf423, type: 2}
+    level: 2
+  - _base: {fileID: 11400000, guid: 7bf6caf3d81ecfb41a23f69f7acbf423, type: 2}
+    level: 2
 --- !u!1 &347051260
 GameObject:
   m_ObjectHideFlags: 0
@@ -3183,6 +3205,81 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 3086580458240366753, guid: bd64ba04146162343a0a4a711ab8c34e, type: 3}
   m_PrefabInstance: {fileID: 1968506719}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &917707444
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 917707445}
+  - component: {fileID: 917707446}
+  - component: {fileID: 917707447}
+  m_Layer: 5
+  m_Name: PlayerCharacter
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!224 &917707445
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 917707444}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 1}
+  m_LocalScale: {x: 59.99999, y: 59.99999, z: 59.99999}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 121866360}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -192.4, y: -52.5}
+  m_SizeDelta: {x: 3.0426, y: 3.043}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &917707446
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 917707444}
+  m_CullTransparentMesh: 1
+--- !u!114 &917707447
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 917707444}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 5607302010678801072, guid: 0c3bdeced0ed9bb4bbb1ace372f8a758, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
 --- !u!1 &1002909230
 GameObject:
   m_ObjectHideFlags: 0
@@ -4007,6 +4104,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0710b6e737f89384795a7f754fb0cf53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
+  sprite: {fileID: 5607302010678801072, guid: 0c3bdeced0ed9bb4bbb1ace372f8a758, type: 3}
+  name: Futlop
 --- !u!212 &1389354283
 SpriteRenderer:
   serializedVersion: 2
@@ -4095,18 +4194,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Party
   creatures:
-  - _base: {fileID: 11400000, guid: 7bf6caf3d81ecfb41a23f69f7acbf423, type: 2}
-    level: 4
-  - _base: {fileID: 11400000, guid: 0ab0c619fd9609e42b5be1237dd6695b, type: 2}
-    level: 10
   - _base: {fileID: 11400000, guid: ec4e4e97648b40442a5e1d271621ef6d, type: 2}
-    level: 2
-  - _base: {fileID: 11400000, guid: ec4e4e97648b40442a5e1d271621ef6d, type: 2}
-    level: 5
-  - _base: {fileID: 11400000, guid: ec4e4e97648b40442a5e1d271621ef6d, type: 2}
-    level: 6
-  - _base: {fileID: 11400000, guid: 7bf6caf3d81ecfb41a23f69f7acbf423, type: 2}
-    level: 4
+    level: 8
 --- !u!114 &1389354287
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4226,6 +4315,81 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!1 &1527046673
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1527046676}
+  - component: {fileID: 1527046675}
+  - component: {fileID: 1527046674}
+  m_Layer: 5
+  m_Name: TrainerCharacter
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!114 &1527046674
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1527046673}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: -6815444706308093326, guid: 72df64b00069bf64c814b0a1a505bacc, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1527046675
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1527046673}
+  m_CullTransparentMesh: 1
+--- !u!224 &1527046676
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1527046673}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 1}
+  m_LocalScale: {x: 59.99999, y: 59.99999, z: 59.99999}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 121866360}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 199, y: 130.9}
+  m_SizeDelta: {x: 1.49, y: 3.76}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1534127437
 GameObject:
   m_ObjectHideFlags: 0
@@ -9069,6 +9233,8 @@ MonoBehaviour:
   enemyUnit: {fileID: 186412594}
   dialogBox: {fileID: 913577351}
   partyScreen: {fileID: 187838139}
+  playerImage: {fileID: 917707447}
+  trainerImage: {fileID: 1527046674}
 --- !u!1001 &1860641575010437777
 PrefabInstance:
   m_ObjectHideFlags: 0
