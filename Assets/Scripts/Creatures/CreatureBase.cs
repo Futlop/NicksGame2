@@ -21,6 +21,7 @@ public class CreatureBase : ScriptableObject
     [SerializeField] int spAttack;
     [SerializeField] int spDefense;
     [SerializeField] int speed;
+    [SerializeField] int catchRate = 255;
 
     [SerializeField] List<LearnableMove> learnableMoves;
 
@@ -83,6 +84,8 @@ public class CreatureBase : ScriptableObject
     {
         get { return speed; }
     }
+
+    public int CatchRate => catchRate;
 
     public List<LearnableMove> LearnableMoves
     {

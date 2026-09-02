@@ -944,7 +944,7 @@ Canvas:
   m_VertexColorAlwaysGammaSpace: 0
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: 0
+  m_SortingLayerID: 821185999
   m_SortingOrder: 0
   m_TargetDisplay: 0
 --- !u!1 &130470334
@@ -4223,9 +4223,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MapArea
   wildCreatures:
-  - _base: {fileID: 11400000, guid: ec4e4e97648b40442a5e1d271621ef6d, type: 2}
-    level: 5
-  - _base: {fileID: 11400000, guid: ec4e4e97648b40442a5e1d271621ef6d, type: 2}
+  - _base: {fileID: 11400000, guid: 0f47647e265dba64b9404bb962fbaaa1, type: 2}
+    level: 1
+  - _base: {fileID: 11400000, guid: 7bf6caf3d81ecfb41a23f69f7acbf423, type: 2}
     level: 7
 --- !u!224 &1336905614 stripped
 RectTransform:
@@ -9479,6 +9479,7 @@ MonoBehaviour:
   partyScreen: {fileID: 187838139}
   playerImage: {fileID: 917707447}
   trainerImage: {fileID: 1527046674}
+  ballSprite: {fileID: 5831915685902777826, guid: 96f1e2449f7c32e48bdfd2e777d5a34e, type: 3}
 --- !u!1001 &1860641575010437777
 PrefabInstance:
   m_ObjectHideFlags: 0

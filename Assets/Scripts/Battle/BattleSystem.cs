@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public enum BattleState { Start, ActionSelection, MoveSelection, RunningTurn, Busy, PartyScreen, AboutToUse, BattleOver}
 public enum BattleAction { Move, SwitchCreature, UseItem, Run}
@@ -15,6 +16,7 @@ public class BattleSystem : MonoBehaviour
     [SerializeField] PartyScreen partyScreen;
     [SerializeField] Image playerImage;
     [SerializeField] Image trainerImage;
+    [SerializeField] GameObject ballSprite;
 
     public event Action<bool> OnBattleOver;
 
@@ -38,6 +40,7 @@ public class BattleSystem : MonoBehaviour
         isTrainerBattle = false;
         this.playerParty = playerParty;
         this.wildCreature = wildCreature;
+        player = playerParty.GetComponent<PlayerController>();
         StartCoroutine(SetupBattle());
     }
 
@@ -184,6 +187,11 @@ public class BattleSystem : MonoBehaviour
                 var selectedCreature = playerParty.Creatures[currentMember];
                 state = BattleState.Busy;
                 yield return SwitchCreature(selectedCreature);
+            }
+            else if(playerAction == BattleAction.UseItem)
+            {
+                dialogBox.EnableActionSelector(false);
+                yield return ThrowBall();
             }
 
             // Enemy turn
@@ -409,7 +417,7 @@ public class BattleSystem : MonoBehaviour
             }
             else if(currentAction == 1) //Bag is selected
             {
-                
+                StartCoroutine(RunTurns(BattleAction.UseItem));
             }
             else if(currentAction == 2) //Creatures is selected
             {
@@ -583,5 +591,86 @@ public class BattleSystem : MonoBehaviour
 
         yield return dialogBox.TypeDialog("Choose an action");
         state = BattleState.RunningTurn;
+    }
+
+    IEnumerator ThrowBall()
+    {
+        state = BattleState.Busy;
+
+        if (isTrainerBattle)
+        {
+            yield return dialogBox.TypeDialog("You can't steal a trainer's creature!");
+            state = BattleState.RunningTurn;
+            yield break;
+        }
+
+        yield return dialogBox.TypeDialog($"{player.Name} used a Basic Ball!");
+
+        var ballObj = Instantiate(ballSprite, playerUnit.transform.position - new Vector3(2, 0), Quaternion.identity);
+        var ball = ballObj.GetComponent<SpriteRenderer>();
+
+        // Animations
+        yield return ball.transform.DOJump(enemyUnit.transform.position + new Vector3(0, 2), 2f, 1, 1f).WaitForCompletion();
+        yield return enemyUnit.PlayCaptureAnimation();
+        yield return ball.transform.DOMoveY(enemyUnit.transform.position.y - 1.5f, 0.5f).WaitForCompletion();
+
+        int shakeCount = TryToCatchCreature(enemyUnit.Creature);
+
+        for(int i = 0; i < Mathf.Min(shakeCount, 3); i++)
+        {
+            yield return new WaitForSeconds(0.5f);
+            yield return ball.transform.DOPunchRotation(new Vector3(0, 0, 10f), 0.8f).WaitForCompletion();
+        }
+
+        if(shakeCount == 4)
+        {
+            // Successful Capture
+            yield return dialogBox.TypeDialog($"{enemyUnit.Creature.Base.Name} was caught!");
+            yield return ball.DOFade(0, 1.5f).WaitForCompletion();
+
+            playerParty.AddCreature(enemyUnit.Creature);
+            yield return dialogBox.TypeDialog($"{enemyUnit.Creature.Base.Name} was added to your party!");
+
+            Destroy(ball);
+            Destroy(ballObj);
+            BattleOver(true);
+        }
+        else
+        {
+            // Creature broke free
+            yield return new WaitForSeconds(1f);
+            ball.DOFade(0, 0.2f);
+            yield return enemyUnit.PlayBreakoutAnimation();
+
+            if(shakeCount < 2)
+                yield return dialogBox.TypeDialog($"{enemyUnit.Creature.Base.Name} broke free");
+            else
+                yield return dialogBox.TypeDialog("Almost had it");
+
+            Destroy(ball);
+            Destroy(ballObj);
+            state = BattleState.RunningTurn;
+        }
+    }
+
+    int TryToCatchCreature(Creature creature)
+    {
+        float a = (3 * creature.MaxHP - 2 * creature.HP) * creature.Base.CatchRate * ConditionsDB.GetStatusBonus(creature.Status) / (3 * creature.MaxHP);
+
+        if(a >= 255)
+            return 4;
+        
+        float b = 1048560 / Mathf.Sqrt(Mathf.Sqrt(16711680 / a));
+
+        int shakeCount = 0;
+        while(shakeCount < 4)
+        {
+            if(UnityEngine.Random.Range(0, 65535) >= b)
+                break;
+
+            shakeCount++;
+        }
+
+        return shakeCount;
     }
 }
