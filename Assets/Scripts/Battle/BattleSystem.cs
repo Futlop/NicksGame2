@@ -26,6 +26,7 @@ public class BattleSystem : MonoBehaviour
     int currentMove;
     int currentMember;
     bool aboutToUseChoice = true;
+    int escapeAttempts;
 
     Party playerParty;
     Party trainerParty;
@@ -100,6 +101,7 @@ public class BattleSystem : MonoBehaviour
             dialogBox.SetMoveNames(playerUnit.Creature.Moves);
         }
 
+        escapeAttempts = 0;
         partyScreen.Init();
         yield return dialogBox.TypeDialog($"Choose an action");
         ActionSelection();
@@ -192,6 +194,11 @@ public class BattleSystem : MonoBehaviour
             {
                 dialogBox.EnableActionSelector(false);
                 yield return ThrowBall();
+            }
+            else if(playerAction == BattleAction.Run)
+            {
+                dialogBox.EnableActionSelector(false);
+                yield return TryToEscape();
             }
 
             // Enemy turn
@@ -426,7 +433,7 @@ public class BattleSystem : MonoBehaviour
             }
             else if(currentAction == 3) //Run is selected
             {
-                
+                StartCoroutine(RunTurns(BattleAction.Run));
             }
         }
     }
@@ -672,5 +679,44 @@ public class BattleSystem : MonoBehaviour
         }
 
         return shakeCount;
+    }
+
+    IEnumerator TryToEscape()
+    {
+        state = BattleState.Busy;
+
+        if (isTrainerBattle)
+        {
+            yield return dialogBox.TypeDialog("You can't run from trainer battles");
+            state = BattleState.RunningTurn;
+            yield break;
+        }
+
+        escapeAttempts++;
+
+        int playerSpeed = playerUnit.Creature.Speed;
+        int enemySpeed = enemyUnit.Creature.Speed;
+
+        if(enemySpeed < playerSpeed)
+        {
+            yield return dialogBox.TypeDialog("Got away safely!");
+            BattleOver(true);
+        }
+        else
+        {
+            float f = (playerSpeed * 128) / enemySpeed + 30 * escapeAttempts;
+            f = f % 256;
+
+            if(UnityEngine.Random.Range(0, 256) < f)
+            {
+                yield return dialogBox.TypeDialog("Got away safely!");
+                BattleOver(true);
+            }
+            else
+            {
+                yield return dialogBox.TypeDialog("Couldn't get away");
+                state = BattleState.RunningTurn;
+            }
+        }
     }
 }

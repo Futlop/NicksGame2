@@ -4224,7 +4224,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MapArea
   wildCreatures:
   - _base: {fileID: 11400000, guid: 0f47647e265dba64b9404bb962fbaaa1, type: 2}
-    level: 1
+    level: 20
   - _base: {fileID: 11400000, guid: 7bf6caf3d81ecfb41a23f69f7acbf423, type: 2}
     level: 7
 --- !u!224 &1336905614 stripped
