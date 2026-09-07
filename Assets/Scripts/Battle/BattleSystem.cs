@@ -255,11 +255,7 @@ public class BattleSystem : MonoBehaviour
 
             if (targetUnit.Creature.HP <= 0)
             {
-                yield return dialogBox.TypeDialog($"{targetUnit.Creature.Base.Name} fainted");
-                targetUnit.PlayFaintAnimation();
-                yield return new WaitForSeconds(2f);
-
-                CheckForBattleOver(targetUnit);
+                yield return HandleCreatureFainted(targetUnit);
             }
         }
         else
@@ -303,11 +299,7 @@ public class BattleSystem : MonoBehaviour
         yield return sourceUnit.Hud.UpdateHP();
         if (sourceUnit.Creature.HP <= 0)
         {
-            yield return dialogBox.TypeDialog($"{sourceUnit.Creature.Base.Name} fainted");
-            sourceUnit.PlayFaintAnimation();
-            yield return new WaitForSeconds(2f);
-
-            CheckForBattleOver(sourceUnit);
+            yield return HandleCreatureFainted(sourceUnit);
             yield return new WaitUntil(() => state == BattleState.RunningTurn);
         }
     }
@@ -343,6 +335,32 @@ public class BattleSystem : MonoBehaviour
             var message = creature.StatusChanges.Dequeue();
             yield return dialogBox.TypeDialog(message);
         }
+    }
+
+    IEnumerator HandleCreatureFainted(BattleUnit faintedUnit)
+    {
+        yield return dialogBox.TypeDialog($"{faintedUnit.Creature.Base.Name} fainted");
+        faintedUnit.PlayFaintAnimation();
+        yield return new WaitForSeconds(2f);
+
+        if (!faintedUnit.IsPlayerUnit)
+        {
+            // Exp gain
+            int expYield = faintedUnit.Creature.Base.ExpYield;
+            int enemyLevel = faintedUnit.Creature.Level;
+            float trainerBonus = (isTrainerBattle) ? 1.5f : 1f;
+
+            int expGain = Mathf.FloorToInt((expYield * enemyLevel * trainerBonus) / 7);
+            playerUnit.Creature.Exp += expGain;
+            yield return dialogBox.TypeDialog($"{playerUnit.Creature.Base.Name} gained {expGain} exp. points!");
+            yield return playerUnit.Hud.SetExpSmooth();
+            
+            // Check lvl up
+
+            yield return new WaitForSeconds(1f);
+        }
+
+        CheckForBattleOver(faintedUnit);
     }
 
     void CheckForBattleOver(BattleUnit faintedUnit)
