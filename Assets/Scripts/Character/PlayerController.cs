@@ -8,6 +8,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] Sprite sprite;
     [SerializeField] string name;
 
+    const float offsetY = 0.3f;
+
     public event Action OnEncountered;
     public event Action<Collider2D> OnEnterTrainerView;
     private Vector2 input;
@@ -48,7 +50,7 @@ public class PlayerController : MonoBehaviour
         var facingDir = new Vector3(character.Animator.MoveX, character.Animator.MoveY);
         var interactPos = transform.position + facingDir;
 
-        var collider = Physics2D.OverlapCircle(interactPos, 0.3f, GameLayers.i.InteractableLayer);
+        var collider = Physics2D.OverlapCircle(interactPos, offsetY, GameLayers.i.InteractableLayer);
         if(collider != null)
         {
             collider.GetComponent<Interactable>()?.Interact(transform);
@@ -63,7 +65,7 @@ public class PlayerController : MonoBehaviour
 
     private void CheckForEncounters()
     {
-        if(Physics2D.OverlapCircle(transform.position, 0.2f, GameLayers.i.GrassLayer) != null)
+        if(Physics2D.OverlapCircle(transform.position - new Vector3(0, 0.3f), 0.2f, GameLayers.i.GrassLayer) != null)
         {
             if(UnityEngine.Random.Range(1, 101) <= 10)
             {

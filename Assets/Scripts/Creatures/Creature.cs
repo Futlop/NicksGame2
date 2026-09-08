@@ -55,7 +55,7 @@ public class Creature
             if(move.Level <= Level)
                 Moves.Add(new Move(move.Base));
 
-            if(Moves.Count >= 4)
+            if(Moves.Count >= CreatureBase.maxMoves)
                 break;
         }
 
@@ -127,6 +127,30 @@ public class Creature
             else
                 StatusChanges.Enqueue($"{Base.Name}'s {stat} fell!");
         }
+    }
+
+    public bool CheckForLevelUp()
+    {
+        if(Exp > Base.GetExpForLevel(level + 1))
+        {
+            level++;
+            return true;
+        }
+
+        return false;
+    }
+
+    public LearnableMove GetLearnableMoveAtCurrentLevel()
+    {
+        return Base.LearnableMoves.Where(x => x.Level == level).FirstOrDefault();
+    }
+
+    public void LearnMove(LearnableMove moveToLearn)
+    {
+        if(Moves.Count > CreatureBase.maxMoves)
+            return;
+
+        Moves.Add(new Move(moveToLearn.Base));
     }
 
     public int MaxHP{ get; private set; }

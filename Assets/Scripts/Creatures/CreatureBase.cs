@@ -27,6 +27,8 @@ public class CreatureBase : ScriptableObject
 
     [SerializeField] List<LearnableMove> learnableMoves;
 
+    public static int maxMoves { get; set; } = 4;
+
     public int GetExpForLevel(int level)
     {
         if(growthRate == GrowthRate.Fast)

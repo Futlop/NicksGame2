@@ -354,8 +354,31 @@ public class BattleSystem : MonoBehaviour
             playerUnit.Creature.Exp += expGain;
             yield return dialogBox.TypeDialog($"{playerUnit.Creature.Base.Name} gained {expGain} exp. points!");
             yield return playerUnit.Hud.SetExpSmooth();
-            
+
             // Check lvl up
+            while (playerUnit.Creature.CheckForLevelUp())
+            {
+                playerUnit.Hud.SetLevel();
+                yield return dialogBox.TypeDialog($"{playerUnit.Creature.Base.Name} grew to level {playerUnit.Creature.Level}!");
+
+                // Try to learn a new move
+                var newMove = playerUnit.Creature.GetLearnableMoveAtCurrentLevel();
+                if(newMove != null)
+                {
+                    if(playerUnit.Creature.Moves.Count < CreatureBase.maxMoves)
+                    {
+                        playerUnit.Creature.LearnMove(newMove);
+                        yield return dialogBox.TypeDialog($"{playerUnit.Creature.Base.Name} learned {newMove.Base.Name}!");
+                        dialogBox.SetMoveNames(playerUnit.Creature.Moves);
+                    }
+                    else
+                    {
+                        
+                    }
+                }
+
+                yield return playerUnit.Hud.SetExpSmooth(true);
+            }
 
             yield return new WaitForSeconds(1f);
         }
