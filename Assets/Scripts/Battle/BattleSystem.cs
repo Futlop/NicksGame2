@@ -1,11 +1,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 
-public enum BattleState { Start, ActionSelection, MoveSelection, RunningTurn, Busy, PartyScreen, AboutToUse, BattleOver}
+public enum BattleState { Start, ActionSelection, MoveSelection, RunningTurn, Busy, PartyScreen, AboutToUse, MoveToForget, BattleOver}
 public enum BattleAction { Move, SwitchCreature, UseItem, Run}
 
 public class BattleSystem : MonoBehaviour
@@ -17,6 +18,7 @@ public class BattleSystem : MonoBehaviour
     [SerializeField] Image playerImage;
     [SerializeField] Image trainerImage;
     [SerializeField] GameObject ballSprite;
+    [SerializeField] MoveSelectionUI moveSelectionUI;
 
     public event Action<bool> OnBattleOver;
 
@@ -27,6 +29,7 @@ public class BattleSystem : MonoBehaviour
     int currentMember;
     bool aboutToUseChoice = true;
     int escapeAttempts;
+    MoveBase moveToLearn;
 
     Party playerParty;
     Party trainerParty;
@@ -143,6 +146,17 @@ public class BattleSystem : MonoBehaviour
         yield return dialogBox.TypeDialog($"{trainer.Name} is about to use {newCreature.Base.Name}.  Would you like to switch creatures?");
         state = BattleState.AboutToUse;
         dialogBox.EnableChoiceBox(true);
+    }
+
+    IEnumerator ChooseMoveToForget(Creature creature, MoveBase newMove)
+    {
+        state = BattleState.Busy;
+        yield return dialogBox.TypeDialog("Choose a move to forget");
+        moveSelectionUI.gameObject.SetActive(true);
+        moveSelectionUI.SetMoveData(creature.Moves.Select(x => x.Base).ToList(), newMove);
+        moveToLearn = newMove;
+
+        state = BattleState.MoveToForget;
     }
 
     IEnumerator RunTurns(BattleAction playerAction)
@@ -373,7 +387,11 @@ public class BattleSystem : MonoBehaviour
                     }
                     else
                     {
-                        
+                        yield return dialogBox.TypeDialog($"{playerUnit.Creature.Base.Name} is trying to learn {newMove.Base.Name}.");
+                        yield return dialogBox.TypeDialog($"But it can't learn more than {CreatureBase.maxMoves} moves");
+                        yield return ChooseMoveToForget(playerUnit.Creature, newMove.Base);
+                        yield return new WaitUntil(() => state != BattleState.MoveToForget);
+                        yield return new WaitForSeconds(2f);
                     }
                 }
 
@@ -439,6 +457,31 @@ public class BattleSystem : MonoBehaviour
         if(state == BattleState.AboutToUse)
         {
             HandleAboutToUse();
+        }
+        if(state == BattleState.MoveToForget)
+        {
+            Action<int> onMoveSelected = (moveIndex) =>
+            {
+                moveSelectionUI.gameObject.SetActive(false);
+                if(moveIndex == CreatureBase.maxMoves)
+                {
+                    // Don't learn new move
+                    StartCoroutine(dialogBox.TypeDialog($"{playerUnit.Creature.Base.Name} did not learn {moveToLearn.Name}"));
+                }
+                else
+                {
+                    // Forget selected move and learn new move
+                    var selectedMove = playerUnit.Creature.Moves[moveIndex].Base;
+                    StartCoroutine(dialogBox.TypeDialog($"{playerUnit.Creature.Base.Name} forgot {selectedMove.Name} and learned {moveToLearn.Name}"));
+
+                    playerUnit.Creature.Moves[moveIndex] = new Move(moveToLearn);
+                }
+
+                moveToLearn = null;
+                state = BattleState.RunningTurn;
+            };
+
+            moveSelectionUI.HandleMoveSelection(onMoveSelected);
         }
     }
 
