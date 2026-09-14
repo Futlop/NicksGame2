@@ -8,7 +8,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] Sprite sprite;
     [SerializeField] string name;
 
-    const float offsetY = 0.3f;
     private Vector2 input;
     private Character character;
     private void Awake()
@@ -47,7 +46,7 @@ public class PlayerController : MonoBehaviour
         var facingDir = new Vector3(character.Animator.MoveX, character.Animator.MoveY);
         var interactPos = transform.position + facingDir;
 
-        var collider = Physics2D.OverlapCircle(interactPos, offsetY, GameLayers.i.InteractableLayer);
+        var collider = Physics2D.OverlapCircle(interactPos, character.OffsetY, GameLayers.i.InteractableLayer);
         if(collider != null)
         {
             collider.GetComponent<Interactable>()?.Interact(transform);
@@ -56,7 +55,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnMoveOver()
     {
-        var colliders = Physics2D.OverlapCircleAll(transform.position - new Vector3(0, 0.3f), 0.2f, GameLayers.i.TriggerableLayers);
+        var colliders = Physics2D.OverlapCircleAll(transform.position - new Vector3(0, character.OffsetY), 0.2f, GameLayers.i.TriggerableLayers);
 
         foreach(var collider in colliders)
         {
@@ -79,4 +78,6 @@ public class PlayerController : MonoBehaviour
     {
         get => sprite;
     }
+
+    public Character Character => character;
 }
