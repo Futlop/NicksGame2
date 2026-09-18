@@ -7,8 +7,9 @@ using UnityEngine.SceneManagement;
 public class Portal : MonoBehaviour, IPlayerTriggerable
 {
     [SerializeField] int sceneToLoad = -1;
-    [SerializeField] DestinationID destinationPortal;
     [SerializeField] Transform spawnPoint;
+    [SerializeField] int id = -1;
+    [SerializeField] int destID = -1;
 
     PlayerController player;
 
@@ -34,7 +35,7 @@ public class Portal : MonoBehaviour, IPlayerTriggerable
 
         yield return SceneManager.LoadSceneAsync(sceneToLoad);
 
-        var destPortal = FindObjectsOfType<Portal>().First(x => x != this && x.destinationPortal == this.destinationPortal);
+        var destPortal = FindObjectsOfType<Portal>().First(x => x != this && x.id == this.destID);
         player.Character.SetPositionAndSnapToTile(destPortal.SpawnPoint.position);
 
         yield return fader.FadeOut(0.5f);
@@ -45,5 +46,3 @@ public class Portal : MonoBehaviour, IPlayerTriggerable
 
     public Transform SpawnPoint => spawnPoint;
 }
-
-public enum DestinationID { A, B, C, D, E }
