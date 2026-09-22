@@ -61,7 +61,7 @@ public class GameController : MonoBehaviour
         worldCamera.gameObject.SetActive(false);
 
         var playerParty = playerController.GetComponent<Party>();
-        var wildCreature = FindObjectOfType<MapArea>().GetComponent<MapArea>().GetRandomWildCreature();
+        var wildCreature = CurrentScene.GetComponent<MapArea>().GetComponent<MapArea>().GetRandomWildCreature();
 
         var wildCreatureCopy = new Creature(wildCreature.Base, wildCreature.Level);
 

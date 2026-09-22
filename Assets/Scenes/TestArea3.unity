@@ -2208,7 +2208,6 @@ GameObject:
   m_Component:
   - component: {fileID: 298981021}
   - component: {fileID: 298981020}
-  - component: {fileID: 298981019}
   m_Layer: 0
   m_Name: Grid
   m_TagString: Untagged
@@ -2216,23 +2215,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &298981019
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 298981018}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 526b1980abe697446b52524a73e0c866, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MapArea
-  wildCreatures:
-  - _base: {fileID: 11400000, guid: ec4e4e97648b40442a5e1d271621ef6d, type: 2}
-    level: 1
-  - _base: {fileID: 11400000, guid: ec4e4e97648b40442a5e1d271621ef6d, type: 2}
-    level: 2
 --- !u!156049354 &298981020
 Grid:
   m_ObjectHideFlags: 0
