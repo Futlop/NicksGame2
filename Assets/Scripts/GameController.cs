@@ -23,6 +23,8 @@ public class GameController : MonoBehaviour
     {
         Instance = this;
         ConditionsDB.Init();
+        CreaturesDB.Init();
+        MoveDB.Init();
     }
 
     private void Start()

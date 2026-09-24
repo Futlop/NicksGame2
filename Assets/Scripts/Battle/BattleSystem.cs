@@ -374,6 +374,8 @@ public class BattleSystem : MonoBehaviour
             {
                 playerUnit.Hud.SetLevel();
                 yield return dialogBox.TypeDialog($"{playerUnit.Creature.Base.Name} grew to level {playerUnit.Creature.Level}!");
+                playerUnit.Creature.CalculateStats();
+                yield return playerUnit.Hud.HPBar.SetHPSmooth((float) playerUnit.Creature.HP / playerUnit.Creature.MaxHP);
 
                 // Try to learn a new move
                 var newMove = playerUnit.Creature.GetLearnableMoveAtCurrentLevel();

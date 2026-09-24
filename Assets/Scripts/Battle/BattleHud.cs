@@ -21,6 +21,14 @@ public class BattleHud : MonoBehaviour
     Creature _creature;
     Dictionary<ConditionID, Color> statusColours;
 
+    public HPBar HPBar
+    {
+        get
+        {
+            return hpBar;
+        }
+    }
+
     public void SetData(Creature creature)
     {
         _creature = creature;
