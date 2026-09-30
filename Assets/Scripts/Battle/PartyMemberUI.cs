@@ -8,7 +8,6 @@ public class PartyMemberUI : MonoBehaviour
     [SerializeField] Text nameText;
     [SerializeField] Text levelText;
     [SerializeField] HPBar hpBar;
-    [SerializeField] Color highlightedColour;
     
     Creature _creature;
 
@@ -24,7 +23,7 @@ public class PartyMemberUI : MonoBehaviour
     public void SetSelected(bool selected)
     {
         if(selected)
-            nameText.color = highlightedColour;
+            nameText.color = GlobalSettings.i.HighlightedColour;
         else
             nameText.color = Color.black;
     }
