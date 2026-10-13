@@ -225,6 +225,28 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 7880392257715307233, guid: 1eed6b790f27a3d4d99049d4831836f6, type: 3}
   m_PrefabInstance: {fileID: 1229919175}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &583205109 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5416668617842963325, guid: 5a44dc1232e953f4fadc367ba93a443a, type: 3}
+  m_PrefabInstance: {fileID: 1188204290}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Text
+--- !u!114 &1009739136 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7175561534955530273, guid: 5a44dc1232e953f4fadc367ba93a443a, type: 3}
+  m_PrefabInstance: {fileID: 1188204290}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
 --- !u!1001 &1188204290
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1433,6 +1455,22 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7827194318093071628, guid: 5a44dc1232e953f4fadc367ba93a443a, type: 3}
+      propertyPath: itemIcon
+      value: 
+      objectReference: {fileID: 1009739136}
+    - target: {fileID: 7827194318093071628, guid: 5a44dc1232e953f4fadc367ba93a443a, type: 3}
+      propertyPath: itemList
+      value: 
+      objectReference: {fileID: 2079110102}
+    - target: {fileID: 7827194318093071628, guid: 5a44dc1232e953f4fadc367ba93a443a, type: 3}
+      propertyPath: itemSlotUI
+      value: 
+      objectReference: {fileID: 6319453959575495734, guid: 6d1e90637d3d39448b349662ec898353, type: 3}
+    - target: {fileID: 7827194318093071628, guid: 5a44dc1232e953f4fadc367ba93a443a, type: 3}
+      propertyPath: itemDescription
+      value: 
+      objectReference: {fileID: 583205109}
     - target: {fileID: 7871004661563964566, guid: 5a44dc1232e953f4fadc367ba93a443a, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -1947,6 +1985,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96ddb908fa7c729419f05867d9550daf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SavingSystem
+--- !u!1 &2079110102 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8168805235325086417, guid: 5a44dc1232e953f4fadc367ba93a443a, type: 3}
+  m_PrefabInstance: {fileID: 1188204290}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &61102166396516890
 PrefabInstance:
   m_ObjectHideFlags: 0
