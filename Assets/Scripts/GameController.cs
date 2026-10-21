@@ -29,6 +29,9 @@ public class GameController : MonoBehaviour
 
         menuController = GetComponent<MenuController>();
 
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+
         ConditionsDB.Init();
         CreaturesDB.Init();
         MoveDB.Init();
