@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,6 +7,8 @@ using UnityEngine;
 public class Party : MonoBehaviour
 {
     [SerializeField] List<Creature> creatures;
+
+    public event Action OnUpdated;
 
     public List<Creature> Creatures
     {
@@ -38,10 +41,16 @@ public class Party : MonoBehaviour
         if(creatures.Count < 6)
         {
             creatures.Add(newCreature);
+            OnUpdated?.Invoke();
         }
         else
         {
             // TODO: Add storage for creatures not in party
         }
+    }
+
+    public static Party GetPlayerParty()
+    {
+        return FindObjectOfType<PlayerController>().GetComponent<Party>();
     }
 }

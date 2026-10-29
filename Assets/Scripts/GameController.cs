@@ -184,7 +184,6 @@ public class GameController : MonoBehaviour
         {
             // Creatures
             partyScreen.gameObject.SetActive(true);
-            partyScreen.SetPartyData(playerController.GetComponent<Party>().Creatures);
             state = GameState.PartyScreen;
         }
         else if(selectedItem == 1)

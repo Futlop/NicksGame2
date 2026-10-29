@@ -3813,8 +3813,8 @@ RectTransform:
   - {fileID: 9001193727952490823}
   - {fileID: 2422953000100748721}
   - {fileID: 3215247040145512250}
-  - {fileID: 5410496614427778965}
   - {fileID: 7781647502819513786}
+  - {fileID: 5410496614427778965}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -4873,6 +4873,7 @@ MonoBehaviour:
   itemDescription: {fileID: 3618502061020729256}
   upArrow: {fileID: 119375284755238017}
   downArrow: {fileID: 711128636827871391}
+  partyScreen: {fileID: 7946900729360233135}
 --- !u!1 &8734215638277718427
 GameObject:
   m_ObjectHideFlags: 0
@@ -5597,6 +5598,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 2161392475710094281, guid: db43c887a3316b842a4b256cbe6de325, type: 3}
   m_PrefabInstance: {fileID: 6263166779003839580}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &7946900729360233135 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4080873809178138355, guid: db43c887a3316b842a4b256cbe6de325, type: 3}
+  m_PrefabInstance: {fileID: 6263166779003839580}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41fa6570766e401449b6903ede364ee3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PartyScreen
 --- !u!1001 &8923575733961628190
 PrefabInstance:
   m_ObjectHideFlags: 0

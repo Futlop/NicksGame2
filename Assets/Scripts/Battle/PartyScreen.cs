@@ -8,6 +8,7 @@ public class PartyScreen : MonoBehaviour
 {
     [SerializeField] Text messageText;
     List<Creature> creatures;
+    Party party;
 
     int selection = 0;
 
@@ -21,11 +22,15 @@ public class PartyScreen : MonoBehaviour
     public void Init()
     {
         memberSlots = GetComponentsInChildren<PartyMemberUI>(true);
+        party = Party.GetPlayerParty();
+        SetPartyData();
+
+        party.OnUpdated += SetPartyData;
     }
 
-    public void SetPartyData(List<Creature> creatures)
+    public void SetPartyData()
     {
-        this.creatures = creatures;
+        creatures = party.Creatures;
         
         for(int i = 0; i < memberSlots.Length; i++)
         {
