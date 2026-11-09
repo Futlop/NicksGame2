@@ -11,13 +11,19 @@ public class PartyMemberUI : MonoBehaviour
     
     Creature _creature;
 
-    public void SetData(Creature creature)
+    public void Init(Creature creature)
     {
         _creature = creature;
+        UpdateData();
 
-        nameText.text = creature.Base.Name;
-        levelText.text = "Lv. " + creature.Level;
-        hpBar.SetHP((float) creature.HP / creature.MaxHP);
+        _creature.OnHPChanged += UpdateData;
+    }
+
+    void UpdateData()
+    {
+        nameText.text = _creature.Base.Name;
+        levelText.text = "Lv. " + _creature.Level;
+        hpBar.SetHP((float) _creature.HP / _creature.MaxHP);
     }
 
     public void SetSelected(bool selected)

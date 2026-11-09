@@ -19,4 +19,17 @@ public class RecoveryItem : ItemBase
 
     [SerializeField] bool revive;
     [SerializeField] bool maxRevive;
+
+    public override bool Use(Creature creature)
+    {
+        if(hpAmount > 0)
+        {
+            if(creature.HP == creature.MaxHP)
+                return false;
+
+            creature.IncreaseHP(hpAmount);
+            return true;
+        }
+        return false;
+    }
 }

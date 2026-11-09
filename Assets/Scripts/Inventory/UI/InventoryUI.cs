@@ -37,6 +37,8 @@ public class InventoryUI : MonoBehaviour
     private void Start()
     {
         UpdateItemList();
+
+        inventory.OnUpdated += UpdateItemList;
     }
 
     public void HandleUpdate(Action onBack)
@@ -65,7 +67,7 @@ public class InventoryUI : MonoBehaviour
         {
             Action onSelected = () =>
             {
-                // Use item
+                StartCoroutine(UseItem());
             };
 
             Action onBackPartyScreen = () =>
@@ -75,6 +77,24 @@ public class InventoryUI : MonoBehaviour
             partyScreen.HandleUpdate(onSelected, onBackPartyScreen);
         }
         
+    }
+
+    IEnumerator UseItem()
+    {
+        state = InventoryUIState.Busy;
+
+        var usedItem = inventory.UseItem(selectedItem, partyScreen.SelectedMember);
+        if(usedItem != null)
+        {
+            yield return DialogManager.Instance.ShowDialogText($"The player used the {usedItem.Name}!");
+        }
+        else
+        {
+            yield return DialogManager.Instance.ShowDialogText("It won't have any effect");
+        }
+
+        ClosePartyScreen();
+
     }
 
     void UpdateItemList()

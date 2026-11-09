@@ -25,7 +25,7 @@ public class ConditionsDB
                 StartMessage = "has been poisoned",
                 OnAfterTurn = (Creature creature) =>
                 {
-                    creature.UpdateHP(Mathf.Clamp(creature.MaxHP / 8, 1, creature.MaxHP));
+                    creature.DecreaseHP(Mathf.Clamp(creature.MaxHP / 8, 1, creature.MaxHP));
                     creature.StatusChanges.Enqueue($"{creature.Base.Name} is hurt by poison");
                 }
             }
@@ -39,7 +39,7 @@ public class ConditionsDB
                 StartMessage = "has been burned",
                 OnAfterTurn = (Creature creature) =>
                 {
-                    creature.UpdateHP(Mathf.Clamp(creature.MaxHP / 16, 1, creature.MaxHP));
+                    creature.DecreaseHP(Mathf.Clamp(creature.MaxHP / 16, 1, creature.MaxHP));
                     creature.StatusChanges.Enqueue($"{creature.Base.Name} is hurt by its burn");
                 }
             }
@@ -70,7 +70,7 @@ public class ConditionsDB
                 StartMessage = "has frostbite",
                 OnAfterTurn = (Creature creature) =>
                 {
-                    creature.UpdateHP(Mathf.Clamp(creature.MaxHP / 16, 1, creature.MaxHP));
+                    creature.DecreaseHP(Mathf.Clamp(creature.MaxHP / 16, 1, creature.MaxHP));
                     creature.StatusChanges.Enqueue($"{creature.Base.Name} is hurt by its frostbite");
                 }
             }
@@ -126,7 +126,7 @@ public class ConditionsDB
                     if(Random.Range(1, 3) == 1)
                         return true;
                     
-                    creature.UpdateHP(Mathf.Clamp(creature.MaxHP / 8, 1, creature.MaxHP));
+                    creature.DecreaseHP(Mathf.Clamp(creature.MaxHP / 8, 1, creature.MaxHP));
                     creature.StatusChanges.Enqueue($"It hurt itself due to confusion");
                     return false;
                 }

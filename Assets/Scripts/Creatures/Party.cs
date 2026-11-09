@@ -19,6 +19,7 @@ public class Party : MonoBehaviour
         set
         {
             creatures = value;
+            OnUpdated?.Invoke();
         }
     }
 
