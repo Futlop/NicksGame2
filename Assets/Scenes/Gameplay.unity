@@ -507,6 +507,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1728670012434742929, guid: 5a44dc1232e953f4fadc367ba93a443a, type: 3}
+      propertyPath: itemSlotUI
+      value: 
+      objectReference: {fileID: 1719369590}
     - target: {fileID: 1760405717290840391, guid: 5a44dc1232e953f4fadc367ba93a443a, type: 3}
       propertyPath: m_AnchorMax.y
       value: 1
@@ -1970,6 +1974,17 @@ MonoBehaviour:
     level: 3
   - _base: {fileID: 11400000, guid: abf4348b3e17d9045983560621dc915d, type: 2}
     level: 4
+--- !u!114 &1719369590 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6159097065283191549, guid: 5a44dc1232e953f4fadc367ba93a443a, type: 3}
+  m_PrefabInstance: {fileID: 1188204290}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42dc074b5122ca24887b24dd3d08003d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ItemSlotUI
 --- !u!1 &1826718641 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7880392257715307233, guid: 1eed6b790f27a3d4d99049d4831836f6, type: 3}

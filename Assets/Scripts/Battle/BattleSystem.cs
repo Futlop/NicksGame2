@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 
-public enum BattleState { Start, ActionSelection, MoveSelection, RunningTurn, Busy, PartyScreen, AboutToUse, MoveToForget, BattleOver}
+public enum BattleState { Start, ActionSelection, MoveSelection, RunningTurn, Busy, PartyScreen, Bag, AboutToUse, MoveToForget, BattleOver}
 public enum BattleAction { Move, SwitchCreature, UseItem, Run}
 
 public class BattleSystem : MonoBehaviour
@@ -19,6 +19,7 @@ public class BattleSystem : MonoBehaviour
     [SerializeField] Image trainerImage;
     [SerializeField] GameObject ballSprite;
     [SerializeField] MoveSelectionUI moveSelectionUI;
+    [SerializeField] InventoryUI inventoryUI;
 
     public event Action<bool> OnBattleOver;
 
@@ -123,6 +124,12 @@ public class BattleSystem : MonoBehaviour
         dialogBox.EnableMoveSelector(false);
     }
 
+    void OpenBag()
+    {
+        inventoryUI.gameObject.SetActive(true);
+        state = BattleState.Bag;
+    }
+
     void OpenPartyScreen()
     {
         partyScreen.CalledFrom = state;
@@ -204,8 +211,9 @@ public class BattleSystem : MonoBehaviour
             }
             else if(playerAction == BattleAction.UseItem)
             {
+                // Handled from item screen
                 dialogBox.EnableActionSelector(false);
-                yield return ThrowBall();
+                
             }
             else if(playerAction == BattleAction.Run)
             {
@@ -230,7 +238,7 @@ public class BattleSystem : MonoBehaviour
         if (!canRunMove)
         {
             yield return ShowStatusChanges(sourceUnit.Creature);
-            yield return sourceUnit.Hud.UpdateHP();
+            yield return sourceUnit.Hud.WaitForHPUpdate();
             yield break;
         }
         yield return ShowStatusChanges(sourceUnit.Creature);
@@ -251,7 +259,7 @@ public class BattleSystem : MonoBehaviour
             else
             {
                 var damageDetails = targetUnit.Creature.TakeDamage(move, sourceUnit.Creature);
-                yield return targetUnit.Hud.UpdateHP();
+                yield return targetUnit.Hud.WaitForHPUpdate();
                 yield return ShowDamageDetails(damageDetails);
             }
 
@@ -308,7 +316,7 @@ public class BattleSystem : MonoBehaviour
         // Statuses like poison can hurt the player's creature after attacking
         sourceUnit.Creature.OnAfterTurn();
         yield return ShowStatusChanges(sourceUnit.Creature);
-        yield return sourceUnit.Hud.UpdateHP();
+        yield return sourceUnit.Hud.WaitForHPUpdate();
         if (sourceUnit.Creature.HP <= 0)
         {
             yield return HandleCreatureFainted(sourceUnit);
@@ -454,6 +462,23 @@ public class BattleSystem : MonoBehaviour
         {
             HandlePartySelection();
         }
+        else if(state == BattleState.Bag)
+        {
+            Action onBack = () =>
+            {
+                inventoryUI.gameObject.SetActive(false);
+                state = BattleState.ActionSelection;
+            };
+
+            Action onItemUsed = () =>
+            {
+                state = BattleState.Busy;
+                inventoryUI.gameObject.SetActive(false);
+                StartCoroutine(RunTurns(BattleAction.UseItem));
+            };
+
+            inventoryUI.HandleUpdate(onBack, onItemUsed);
+        }
         if(state == BattleState.AboutToUse)
         {
             HandleAboutToUse();
@@ -508,7 +533,7 @@ public class BattleSystem : MonoBehaviour
             }
             else if(currentAction == 1) //Bag is selected
             {
-                StartCoroutine(RunTurns(BattleAction.UseItem));
+                OpenBag();
             }
             else if(currentAction == 2) //Creatures is selected
             {
